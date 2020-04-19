@@ -1,0 +1,2 @@
+# SeoBlog
+personal blog
