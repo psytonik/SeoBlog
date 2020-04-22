@@ -200,7 +200,7 @@ exports.deleteBlogBySlug = async (req,res) => {
                         })
                     }
                     res.json({
-                        message:'Blog removed successfully'
+                        message: 'UserBlog removed successfully'
                     })
             })
     } catch (error) {

@@ -1,22 +1,21 @@
 import React, {useState, useEffect, Fragment} from 'react';
 import Link from 'next/link';
-import Router from 'next/router';
-import {getCookie,isAuth} from "../../service/actions/auth";
-import {updateBlogBySlug,removeBlog,listOfBlog} from "../../service/actions/blog";
-import {Form, FormGroup, Label, Input, Button} from "reactstrap";
+import {getCookie, isAuth} from "../../service/actions/auth";
+import {removeBlog, listOfBlog} from "../../service/actions/blog";
+import {CardBody, CardTitle, Card, Col, Row} from "reactstrap";
 import moment from "moment";
 
-const ReadBlog = () => {
-    const [blog,setBlog] = useState([]);
-    const [message,setMessage] = useState('');
+const ReadBlog = ({username}) => {
+    const [blog, setBlog] = useState([]);
+    const [message, setMessage] = useState('');
     const token = getCookie('token');
 
-    useEffect(()=>{
+    useEffect(() => {
         loadBlog()
-    },[]);
+    }, []);
     const loadBlog = () => {
-        listOfBlog()
-            .then(data=>{
+        listOfBlog(username)
+            .then(data => {
                 if(data.error){
                     setMessage(data.error)
                 }
@@ -25,26 +24,28 @@ const ReadBlog = () => {
     };
     const showAllBlog = (blog) =>{
       return blog && blog.map((b,i)=>{
-          return(
-              <div className="col-md-4">
-                  <div key={i}  className="card mb-4">
-                      <div className="card-title">
+          return (
+              <Col col-md={4} key={i}>
+                  <Card className="mb-4">
+                      <CardTitle>
                           <h3 className="text-center">{b.title}</h3>
-                      </div>
-                      <div className="card-body">
-                          <p className="mark">Written by {b.postedBy.name} | Published on {moment(b.updatedAt).fromNow()}</p>
-                          <button className="btn btn-sm btn-danger" onClick={()=>deleteConfirm(b.slug)}>Remove</button>
+                      </CardTitle>
+                      <CardBody>
+                          <p className="mark">Written by {b.postedBy.name} | Published
+                              on {moment(b.updatedAt).fromNow()}</p>
+                          <button className="btn btn-sm btn-danger" onClick={() => deleteConfirm(b.slug)}>Remove
+                          </button>
                           {showUpdateButton(b)}
-                      </div>
-                  </div>
-              </div>
+                      </CardBody>
+                  </Card>
+              </Col>
           )
       })
     };
     const showUpdateButton = (blog) =>{
         if(isAuth() && isAuth().role === 0) {
             return (
-                <Link href={`/user/crud/blog/${blog.slug}`}>
+                <Link href={`/user/crud/${blog.slug}`}>
                     <a className="btn btn-sm btn-warning ml-2">Update</a>
                 </Link>
             )
@@ -76,10 +77,10 @@ const ReadBlog = () => {
 
     return (
         <Fragment>
-            <div className="row">
+            <Row>
                 {message && <div className="alert alert-warning">{message}</div>}
                 {showAllBlog(blog)}
-            </div>
+            </Row>
         </Fragment>
     );
 };

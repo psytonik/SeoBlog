@@ -1,5 +1,4 @@
 const Blog = require('../models/Blog');
-
 const User = require('../models/User');
 const shortId = require('shortid');
 const jwt = require('jsonwebtoken');
@@ -119,7 +118,7 @@ exports.canUpdateDeleteBlog = async (req, res, next) => {
             if (error) {
                 return res.status(400).json({error: errorHandler(error)})
             }
-            let authorizedUsed = data.postedBy._id.toString() === req.profile.toString();
+            let authorizedUsed = data.postedBy._id.toString() === req.profile._id.toString();
             if (!authorizedUsed) {
                 return res.status(400).json({error: 'You are not authorized'})
             }

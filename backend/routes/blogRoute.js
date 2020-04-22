@@ -11,6 +11,7 @@ const {
     getPhoto, relatedBlog, searchBlog, getBlogByUser
 } = require('../contollers/blogController');
 
+
 //// write new blog
 router.post('/blog', requireSignIn, adminMiddleware, createBlog);
 

@@ -4,22 +4,22 @@ import PrivateProtection from "../../components/Auth/PrivateProtection";
 import {isAuth} from "../../service/actions/auth";
 import Link from "next/link";
 
-const UserIndex = () => {
+const UserDashboard = () => {
     return (
-            <Layout>
-                <PrivateProtection>
-                    <div className="container-fluid">
-                        <h2><small>{isAuth() && isAuth().name}'s</small> Dashboard</h2>
-                        <div className="row">
-                            <div className="col-md-2">
-                                <ul className="list-group">
-                                    <li className="list-group-item">
-                                        <Link href="/user/crud/blogcreate">
-                                            <a>Create Blog</a>
-                                        </Link>
+        <Layout>
+            <PrivateProtection>
+                <div className="container-fluid">
+                    <h2><small>{isAuth() && isAuth().name}'s</small> Dashboard</h2>
+                    <div className="row">
+                        <div className="col-md-2">
+                            <ul className="list-group">
+                                <li className="list-group-item">
+                                    <Link href="/user/crud/userblog">
+                                        <a>Create Blog</a>
+                                    </Link>
                                     </li>
                                     <li className="list-group-item">
-                                        <Link href="/user/crud/blog-update">
+                                        <Link href="/user/crud/user-blog-update">
                                             <a>Update/Delete Blog</a>
                                         </Link>
                                     </li>
@@ -41,4 +41,4 @@ const UserIndex = () => {
     );
 };
 
-export default UserIndex;
+export default UserDashboard;

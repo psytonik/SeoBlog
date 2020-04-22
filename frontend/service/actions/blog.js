@@ -72,25 +72,38 @@ export const relatedBlog = blog => {
 };
 
 /// List of all blog's for admin page
-export const listOfBlog = () => {
-    return fetch(`${API}/blog`,{method:"GET"})
-        .then(response=>{
+export const listOfBlog = (username) => {
+    let listBlogEndpoint;
+    if (username) {
+        listBlogEndpoint = `${API}/${username}/blog`;
+    } else {
+        listBlogEndpoint = `${API}/blog`
+    }
+    return fetch(`${listBlogEndpoint}`, {method: "GET"})
+        .then(response => {
             return response.json()
         })
-        .catch(error=>console.error(error))
+        .catch(error => console.error(error))
 };
 
 /// Remove exiting blog
 export const removeBlog = (slug,token) => {
-    return fetch(`${API}/blog/${slug}`,{
-        method:"DELETE",
-        headers:{
+    let removeBlogEndpoint;
+    if (isAuth() && isAuth().role === 1) {
+        removeBlogEndpoint = `${API}/blog/${slug}`;
+    } else {
+        removeBlogEndpoint = `${API}/user/blog/${slug}`
+    }
+
+    return fetch(`${removeBlogEndpoint}`, {
+        method: "DELETE",
+        headers: {
             Accept: "application/json",
-            'Content-Type':'application/json',
-            Authorization:`Bearer ${token}`
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
         }
     })
-        .then(response=>{
+        .then(response => {
             return response.json()
         })
         .catch(error=>console.error(error))
@@ -98,15 +111,21 @@ export const removeBlog = (slug,token) => {
 
 /// Update blog
 export const updateBlogBySlug = (slug,blog,token) => {
-    return fetch(`${API}/blog/${slug}`,{
-        method:"PUT",
-        headers:{
+    let updateBlogEndpoint;
+    if (isAuth() && isAuth().role === 1) {
+        updateBlogEndpoint = `${API}/blog/${slug}`;
+    } else if (isAuth() && isAuth().role === 0) {
+        updateBlogEndpoint = `${API}/user/blog/${slug}`
+    }
+    return fetch(`${updateBlogEndpoint}`, {
+        method: "PUT",
+        headers: {
             Accept: "application/json",
-            Authorization:`Bearer ${token}`
+            Authorization: `Bearer ${token}`
         },
-        body:blog
+        body: blog
     })
-        .then(response=>{
+        .then(response => {
             return response.json()
         })
         .catch(error=>console.error(error))
