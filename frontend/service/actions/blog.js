@@ -1,20 +1,30 @@
 import fetch from 'isomorphic-fetch';
 import {API} from "../../config";
 import queryString from 'query-string';
+import {isAuth} from './auth';
+
 /// Write new blog story
-export const createBlog = (blog,token) => {
-    return fetch(`${API}/blog`,{
-        method:"POST",
-        headers:{
+export const createBlog = (blog, token) => {
+
+    let createBlogEndpoint;
+    if (isAuth() && isAuth().role === 1) {
+        createBlogEndpoint = `${API}/blog`;
+    } else {
+        createBlogEndpoint = `${API}/user/blog`
+    }
+
+    return fetch(`${createBlogEndpoint}`, {
+        method: "POST",
+        headers: {
             Accept: "application/json",
-            Authorization:`Bearer ${token}`
+            Authorization: `Bearer ${token}`
         },
-        body:blog
+        body: blog
     })
-        .then(response=>{
+        .then(response => {
             return response.json()
         })
-        .catch(error=>console.error(error))
+        .catch(error => console.error(error))
 };
 
 /// Get all blog's to main page of site with categories and tags

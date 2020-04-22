@@ -1,17 +1,17 @@
 import fetch from 'isomorphic-fetch';
 import {API} from "../../config";
 
-export const getPublicUserProfile = (username) => {
-    return fetch(`${API}/user/${username}`,{
-        method:'GET',
-        headers:{
-            Accept:'application/json'
+export const getPublicUserProfile = username => {
+    return fetch(`${API}/user/${username}`, {
+        method: 'GET',
+        headers: {
+            Accept: 'application/json'
         }
     })
-        .then(response=>{
+        .then(response => {
             return response.json()
         })
-        .catch(error=>console.error(error))
+        .catch(error => console.error(error))
 }
 
 export const getUserProfile = token => {

@@ -1,7 +1,7 @@
 const Blog = require('../models/Blog');
 const Category = require('../models/Category');
 const Tags = require('../models/Tags');
-
+const User = require('../models/User')
 const formidable = require('formidable');
 const slugify = require('slugify');
 const stripHtml = require('string-strip-html');
@@ -98,11 +98,10 @@ exports.createBlog = async (req,res) =>{
 
 exports.getBlog = async (req,res) => {
     try{
-        console.log(req)
         await Blog.find({})
-            .populate('categories','_id name slug')
-            .populate('tags','_id name slug')
-            .populate('postedBy','_id name username profile')
+            .populate('categories', '_id name slug')
+            .populate('tags', '_id name slug')
+            .populate('postedBy', '_id name username')
             .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')
             .exec((error,data)=>{
                 if(error){
@@ -126,9 +125,9 @@ exports.getBlogByCategoryTags = async (req,res) => {
         let blogs,categories,tags;
 
         await Blog.find({})
-            .populate('categories','_id name slug')
-            .populate('tags','_id name slug')
-            .populate('postedBy','_id name username profile')
+            .populate('categories', '_id name slug')
+            .populate('tags', '_id name slug')
+            .populate('postedBy', '_id name username')
             .sort({createdAt:'-1'})
             .skip(skip)
             .limit(limit)
@@ -171,10 +170,9 @@ exports.getBlogBySlug = async (req,res) => {
     try{
         const slug = await req.params.slug.toLowerCase();
         await Blog.findOne({slug})
-            // .select('-photo')
-            .populate('categories','_id name slug')
-            .populate('tags','_id name slug')
-            .populate('postedBy','_id name username profile')
+            .populate('categories', '_id name slug')
+            .populate('tags', '_id name slug')
+            .populate('postedBy', '_id name username')
             .select('_id title body slug metaTitle metaDescription categories tags postedBy createdAt updatedAt')
             .exec((error,data)=>{
                 if(error){
@@ -292,14 +290,14 @@ exports.relatedBlog = async (req,res) => {
     try{
         let limit = await req.body.limit? parseInt(req.body.limit):3;
         const {_id,categories} = await req.body.blog;
-        await Blog.find({_id:{$ne:_id},categories:{$in:categories}})
+        await Blog.find({_id: {$ne: _id}, categories: {$in: categories}})
             .limit(limit)
-            .populate('postedBy','_id name username profile')
+            .populate('postedBy', '_id name username')
             .select('title slug excerpt postedBy createdAt updatedAt')
-            .exec((error,blog)=>{
-                if (error){
+            .exec((error, blog) => {
+                if (error) {
                     return res.status(400).json({
-                        error:errorHandler(error)
+                        error: errorHandler(error)
                     })
                 }
                 res.json(blog)
@@ -328,8 +326,38 @@ exports.searchBlog = async (req,res) => {
                 }
             ).select('-photo -body');
         }
-    }catch(error){
+    } catch (error) {
         console.error(error.message);
         res.status(500).send("Sever Error");
     }
 };
+
+exports.getBlogByUser = async (req, res) => {
+    try {
+        await User.findOne({username: req.params.username})
+            .exec((error, user) => {
+                if (error) {
+                    return res.json({
+                        error: errorHandler(error)
+                    })
+                }
+                let userId = user._id;
+                Blog.find({postedBy: userId})
+                    .populate('categories', '_id name slug')
+                    .populate('tags', '_id name slug')
+                    .populate('postedBy', 'id name username')
+                    .select('_id title slug postedBy createdAt updatedAt')
+                    .exec((error, data) => {
+                        if (error) {
+                            return res.json({
+                                error: errorHandler(error)
+                            })
+                        }
+                        res.json(data);
+                    })
+            });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Sever Error");
+    }
+}

@@ -1,7 +1,10 @@
+const Blog = require('../models/Blog');
+
 const User = require('../models/User');
 const shortId = require('shortid');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
+const {errorHandler} = require("../helpers/dbErrorHandler");
 
 //// Controllers
 exports.signUp = async (req, res) => {
@@ -71,6 +74,7 @@ exports.signOut = async (req, res) => {
 exports.requireSignIn = expressJwt({
     secret: process.env.JWT_SECRET
 });
+
 exports.authMiddleware = async (req, res, next) => {
     try {
         const authUserId = await req.user._id;
@@ -87,6 +91,7 @@ exports.authMiddleware = async (req, res, next) => {
         res.status(500).send("Sever Error")
     }
 };
+
 exports.adminMiddleware = async (req, res, next) => {
     try {
         const adminUserId = await req.user._id;
@@ -105,4 +110,19 @@ exports.adminMiddleware = async (req, res, next) => {
         console.error(error.message);
         res.status(500).send("Sever Error")
     }
+};
+
+exports.canUpdateDeleteBlog = async (req, res, next) => {
+    const slug = req.params.slug.toLowerCase();
+    Blog.findOne({slug})
+        .exec((error, data) => {
+            if (error) {
+                return res.status(400).json({error: errorHandler(error)})
+            }
+            let authorizedUsed = data.postedBy._id.toString() === req.profile.toString();
+            if (!authorizedUsed) {
+                return res.status(400).json({error: 'You are not authorized'})
+            }
+            next();
+        })
 };

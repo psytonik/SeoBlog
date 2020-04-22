@@ -6,7 +6,7 @@ const User = require('../models/User');
 const Blog = require('../models/Blog');
 const {errorHandler} = require("../helpers/dbErrorHandler");
 
-//// Controller
+//// User Controller
 exports.readUserProfile = async (req,res) => {
     try {
         req.profile.hashed_password = undefined;
@@ -16,32 +16,32 @@ exports.readUserProfile = async (req,res) => {
         res.status(500).send("Sever Error");
     }
 };
+
 exports.readPublicProfile = async (req,res) => {
     try {
-        let {user} = await req.params.username;
-        await User.findOne({user}).exec((error,userFromDB)=>{
-            if (error || !userFromDB){
+        await User.findOne(req.params).exec((error, userFromDB) => {
+            if (error || !userFromDB) {
                 return res.status(400).json({
-                    error:'This User not Found'
+                    error: 'This User not Found'
                 })
             }
-            user = userFromDB;
+            let user = userFromDB;
             let userId = user._id;
-            Blog.find({postedBy:userId})
-                .populate('categories','_id name slug')
-                .populate('tags','_id name slug')
-                .populate('postedBy','_id name about')
+            Blog.find({postedBy: userId})
+                .populate('categories', '_id name slug')
+                .populate('tags', '_id name slug')
+                .populate('postedBy', '_id name about')
                 .limit(10)
                 .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')
-                .exec((error,data)=>{
-                    if(error || !data){
+                .exec((error, data) => {
+                    if (error || !data) {
                         return res.status(400).json({
                             error: errorHandler(error)
                         })
                     }
                     user.photo = undefined
                     user.hashed_password = undefined;
-                    return res.json({user,blogs:data})
+                    return res.json({user, blogs: data})
                 })
         })
     }  catch (error) {
@@ -49,6 +49,7 @@ exports.readPublicProfile = async (req,res) => {
         res.status(500).send("Sever Error");
     }
 }
+
 exports.editUserProfile = async (req,res) => {
     try{
         let form = new formidable.IncomingForm();
@@ -95,20 +96,20 @@ exports.editUserProfile = async (req,res) => {
         res.status(500).send("Sever Error");
     }
 }
+
 exports.getUserPhoto = async (req,res) => {
     try{
-        const {userName} = req.params.username;
-        await User.findOne({userName})
+        await User.findOne(req.params)
             .select('photo')
-            .exec((error,user)=>{
-            if(error || !user ){
-                return res.status(400).json({
-                    error:'User photo not found'
-                })
-            }
-            res.set("Content-Type",user.photo.contentType);
-            return res.send(user.photo.data);
-        })
+            .exec((error, user) => {
+                if (error || !user) {
+                    return res.status(400).json({
+                        error: 'User photo not found'
+                    })
+                }
+                res.set("Content-Type", user.photo.contentType);
+                return res.send(user.photo.data);
+            })
     }catch (error) {
         console.error(error.message);
         res.status(500).send("Sever Error");
