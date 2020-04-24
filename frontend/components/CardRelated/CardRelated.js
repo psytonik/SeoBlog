@@ -21,7 +21,7 @@ const CardRelated = ({blog}) => {
                 <section>
                     <Link href={`/blog/${blog.slug}`}>
                         <a>
-                            <h5 className="card-title">{blog.title}</h5>
+                            <h5 className="card-title text-break">{blog.title}</h5>
                         </a>
                     </Link>
                 </section>

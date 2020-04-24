@@ -53,7 +53,7 @@ const BlogUpdate = ({router}) => {
 
     const setCategoriesArray = blogCategories =>{
         let ca = [];
-        blogCategories.map((c,i)=>{
+        blogCategories.map((c) => {
             ca.push(c._id)
         });
         setChecked(ca);
@@ -61,7 +61,7 @@ const BlogUpdate = ({router}) => {
 
     const setTagsArray = blogTags => {
         let ta = [];
-        blogTags.map((t,i)=>{
+        blogTags.map((t) => {
             ta.push(t._id)
         });
         setCheckedTag(ta);
@@ -180,9 +180,10 @@ const BlogUpdate = ({router}) => {
         return result !== -1;
     };
     const showCheckBoxesOfCategories = categories =>{
-        return categories && categories.map(c=>{
-            return (<li className="list-unstyled" key={c._id}>
-                <input onChange={handleToggleCat(c._id)} checked={findOutCategory(c._id)} type="checkbox" className="mr-2"/>
+        return categories && categories.map(c=> {
+            return (<li className="list-unstyled text-break" key={c._id}>
+                <input onChange={handleToggleCat(c._id)} checked={findOutCategory(c._id)} type="checkbox"
+                       className="mr-2"/>
                 <label className="form-check-label">{c.name}</label>
             </li>)
         })

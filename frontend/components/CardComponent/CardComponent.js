@@ -22,12 +22,14 @@ const CardComponent = ({blog}) => {
 
     return (
         <div className="lead pb-4">
-                    <div>
+                    <div className="text-break">
                         <header>
-                            <Link href={`/blog/${blog.slug}`}><a><h2 className="pt-3 pb-3 font-weight-bold">{blog.title}</h2></a></Link>
+                            <Link href={`/blog/${blog.slug}`}><a><h2
+                                className="pt-3 pb-3 font-weight-bold">{blog.title}</h2></a></Link>
                         </header>
                         <section>
-                            <p className="mark ml-1 pt-2 pb-2">Posted By <Link href={`/profile/${blog.postedBy.username}`}>
+                            <p className="mark ml-1 pt-2 pb-2">Posted By <Link
+                                href={`/profile/${blog.postedBy.username}`}>
                                 <a>{blog.postedBy.name}</a></Link> | Published {moment(blog.createdAt).fromNow()}
                             </p>
                         </section>

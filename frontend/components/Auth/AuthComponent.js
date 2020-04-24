@@ -3,7 +3,6 @@ import {Button, Col, Form, FormGroup, Input, Label, Row} from 'reactstrap';
 import {signUp,signIn,authenticateUser,isAuth} from '../../service/actions/auth';
 import Router from 'next/router';
 import Spinner from "../Spinner";
-import AdminProtection from "./AdminProtection";
 
 /**
  * Its smart Sign Up and Sign In Component

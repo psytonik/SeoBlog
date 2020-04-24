@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import {API} from "../../config";
 import queryString from 'query-string';
-import {isAuth} from './auth';
+import {isAuth, handleResponse} from './auth';
 
 /// Write new blog story
 export const createBlog = (blog, token) => {
@@ -22,6 +22,7 @@ export const createBlog = (blog, token) => {
         body: blog
     })
         .then(response => {
+            handleResponse(response)
             return response.json()
         })
         .catch(error => console.error(error))
@@ -50,6 +51,7 @@ export const getBlogWithCatsAndTags = (skip,limit) => {
 export const getSingleBlog = (slug) => {
   return fetch(`${API}/blog/${slug}`,{method:'GET'})
       .then(response=>{
+          handleResponse(response)
           return response.json();
       })
       .catch(error=>console.error(error))
@@ -104,6 +106,7 @@ export const removeBlog = (slug,token) => {
         }
     })
         .then(response => {
+            handleResponse(response)
             return response.json()
         })
         .catch(error=>console.error(error))
@@ -126,6 +129,7 @@ export const updateBlogBySlug = (slug,blog,token) => {
         body: blog
     })
         .then(response => {
+            handleResponse(response)
             return response.json()
         })
         .catch(error=>console.error(error))

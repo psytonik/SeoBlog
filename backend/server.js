@@ -22,11 +22,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 //// ROUTES MIDDLEWARE ////
-app.use('/api',require('./routes/blogRoute'));
-app.use('/api',require('./routes/authRoute'));
-app.use('/api',require('./routes/userRoute'));
-app.use('/api',require('./routes/categoryRoute'));
-app.use('/api',require('./routes/tagsRoute'));
+app.use('/api', require('./routes/blogRoute'));
+app.use('/api', require('./routes/authRoute'));
+app.use('/api', require('./routes/userRoute'));
+app.use('/api', require('./routes/categoryRoute'));
+app.use('/api', require('./routes/tagsRoute'));
+app.use('/api', require('./routes/formRoute'));
 
 //// PORT ////
 const port = process.env.PORT || 8000;

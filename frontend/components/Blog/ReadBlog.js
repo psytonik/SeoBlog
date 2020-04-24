@@ -28,7 +28,7 @@ const ReadBlog = ({username}) => {
               <Col col-md={4} key={i}>
                   <Card className="mb-4">
                       <CardTitle>
-                          <h3 className="text-center">{b.title}</h3>
+                          <h3 className="text-center text-break">{b.title}</h3>
                       </CardTitle>
                       <CardBody>
                           <p className="mark">Written by {b.postedBy.name} | Published

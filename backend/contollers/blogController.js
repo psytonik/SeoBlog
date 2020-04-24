@@ -14,24 +14,24 @@ exports.createBlog = async (req,res) =>{
     try{
         let form = new formidable.IncomingForm();
         form.keepExtensions = true;
-        form.parse(req,(error,fields,files)=>{
-            const {title,body,tags,categories}= fields;
-            if(error){
-                return res.status(400).json({error:'Image cold not uploaded'})
+        form.parse(req, (error, fields, files) => {
+            const {title, body, tags, categories} = fields;
+            if (error) {
+                return res.status(400).json({error: 'Image cold not uploaded'})
             }
-            if(!title || !title.length){
+            if (!title || !title.length) {
                 return res.status(400).json({
-                    error:'Title is required'
+                    error: 'Title is required'
                 })
             }
-            if(!body || body.length < 200){
+            if (!body || body.length < 200) {
                 return res.status(400).json({
-                    error:'Content is too short'
+                    error: 'Content is too short'
                 })
             }
-            if(!categories || categories.length === 0){
+            if (!categories || categories.length === 0) {
                 return res.status(400).json({
-                    error:'At least one category is required'
+                    error: 'At least one category is required'
                 })
             }
             if(!tags || tags.length === 0){
@@ -44,7 +44,6 @@ exports.createBlog = async (req,res) =>{
             blog.title = fields.title;
             blog.body = body;
             blog.excerpt = smartTrim(body,320,' ',' ...');
-            blog.tags = tags;
             blog.slug = slugify(title).toLowerCase();
             blog.metaTitle = `${title} | ${process.env.APP_NAME}`;
             blog.metaDescription = stripHtml(body.substring(0,160));
@@ -225,7 +224,7 @@ exports.updateBlogBySlug = async (req,res) => {
                     oldData = _.merge(oldData,fields);
                     oldData.slug = slugBeforeMerge;
 
-                    const {body,description,categories,tags} = fields;
+                    const {body, categories, tags} = fields;
 
                     if(body){
                         oldData.excerpt = smartTrim(body,320, ' ', ' ...');

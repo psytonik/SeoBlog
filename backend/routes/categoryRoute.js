@@ -6,12 +6,12 @@ const {createCategoryValidator} = require('../validators/categoryValidator');
 const {runValidation} = require('../validators');
 
 /// run middleware
-const {requireSignIn,adminMiddleware} = require("../contollers/authController");
-const {createCategory,getCategory,deleteCategory,getCategoryBySlug} = require('../contollers/categoryController');
+const {requireSignIn, adminMiddleware} = require("../contollers/authController");
+const {createCategory, getCategory, deleteCategory, getCategoryBySlug} = require('../contollers/categoryController');
 
-router.post('/Category',createCategoryValidator,runValidation,requireSignIn,adminMiddleware,createCategory);
-router.get('/Category',getCategory);
-router.get('/Category/:slug',getCategoryBySlug);
-router.delete('/Category/:slug',requireSignIn,adminMiddleware,deleteCategory);
+router.post('/category', createCategoryValidator, runValidation, requireSignIn, adminMiddleware, createCategory);
+router.get('/category', getCategory);
+router.get('/category/:slug', getCategoryBySlug);
+router.delete('/category/:slug', requireSignIn, adminMiddleware, deleteCategory);
 
 module.exports = router;

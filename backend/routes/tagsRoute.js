@@ -5,11 +5,11 @@ const router = express.Router();
 const {tagNameValidator} = require('../validators/tagsValidator');
 const {runValidation} = require('../validators');
 
-const {requireSignIn,adminMiddleware} = require('../contollers/authController');
-const {createTag,getTags,getTagBySlug,deleteTagBySlug} = require('../contollers/tagsContoller');
+const {requireSignIn, adminMiddleware} = require('../contollers/authController');
+const {createTag, getTags, getTagBySlug, deleteTagBySlug} = require('../contollers/tagsContoller');
 
-router.post('/Tags',tagNameValidator,runValidation,requireSignIn,adminMiddleware,createTag);
-router.get('/Tags',getTags);
-router.get('/Tags/:slug',getTagBySlug);
-router.delete('/Tags/:slug',requireSignIn,adminMiddleware,deleteTagBySlug);
+router.post('/tags', tagNameValidator, runValidation, requireSignIn, adminMiddleware, createTag);
+router.get('/tags', getTags);
+router.get('/tags/:slug', getTagBySlug);
+router.delete('/tags/:slug', requireSignIn, adminMiddleware, deleteTagBySlug);
 module.exports = router;

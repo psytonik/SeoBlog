@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// const crypto = require('crypto');
 
 const CategorySchema = new mongoose.Schema({
     name:{

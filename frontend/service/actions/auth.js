@@ -1,14 +1,29 @@
 import fetch from 'isomorphic-fetch';
 import {API} from "../../config";
 import cookie from 'js-cookie';
+import Router from 'next/router';
 
+/**
+ *
+ * @param response
+ */
+export const handleResponse = response => {
+    if (response.status === 401) {
+        signOut(() => {
+            Router.push({
+                pathname: '/signin',
+                query: {message: 'Your session is expired, please Sign In'}
+            })
+        })
+    }
+};
 /**
  * REGISTER USER AND SAVE IN DB
  * @param user
  * @returns {Promise<T>}
  */
 export const signUp = user => {
-    return fetch(`${API}/auth/signup`,{
+    return fetch(`${API}/auth/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -16,7 +31,7 @@ export const signUp = user => {
         },
         body: JSON.stringify(user)
     })
-        .then(response=>{
+        .then(response => {
             return response.json()
         })
         .catch(error=>{

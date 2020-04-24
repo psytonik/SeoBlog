@@ -3,12 +3,12 @@ const router = express.Router();
 
 /// Import Validator
 const {runValidation} = require('../validators');
-const {userSignUpValidator,userSignInValidator} = require('../validators/authValidator');
+const {userSignUpValidator, userSignInValidator} = require('../validators/authValidator');
 
-const {signUp,signIn,signOut,requireSignIn} = require('../contollers/authController');
+const {signUp, signIn, signOut} = require('../contollers/authController');
 
-router.post('/Auth/signup',userSignUpValidator,runValidation,signUp);
-router.post('/Auth/signin',userSignInValidator,runValidation,signIn);
-router.get('/Auth/signout',signOut);
+router.post('/auth/signup', userSignUpValidator, runValidation, signUp);
+router.post('/auth/signin', userSignInValidator, runValidation, signIn);
+router.get('/auth/signout', signOut);
 
 module.exports = router;

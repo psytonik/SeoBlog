@@ -26,9 +26,9 @@ const SingleBlog = ({blog}) => {
     const showRelatedBlog = (related) => {
         return related && related.map((blog,i)=>{
             return (
-                        <div className="col-md-4" key={i}>
+                        <div className="col-md-4 text-break" key={i}>
                             <article>
-                                <CardRelated blog={blog} />
+                                <CardRelated blog={blog}/>
                             </article>
                         </div>
             )
@@ -78,9 +78,11 @@ const SingleBlog = ({blog}) => {
                             </section>
                             <section>
                                 <div className="container-fluid text-center">
-                                    <h1 className="display-3 pb-3 font-weight-bold pt-3">{blog.title}</h1>
+                                    <h1 className="display-3 pb-3 font-weight-bold pt-3 text-break">{blog.title}</h1>
                                     <p className="lead mt-3 mark">
-                                        Posted By <Link href={`/profile/${blog.postedBy.username}`}><a>{blog.postedBy.name}</a></Link>| Published {moment(blog.createdAt).fromNow()}
+                                        Posted By <Link
+                                        href={`/profile/${blog.postedBy.username}`}><a>{blog.postedBy.name}</a></Link>|
+                                        Published {moment(blog.createdAt).fromNow()}
                                     </p>
                                     <div className="pb-3">
                                         {showBlogCategories(blog)}
@@ -91,7 +93,7 @@ const SingleBlog = ({blog}) => {
                         </div>
                         <div className="container">
                             <section>
-                                <div className="col-md-12 lead">
+                                <div className="col-md-12 lead text-break">
                                     {reactRenderHtml(blog.body)}
                                 </div>
                                 <hr/>
