@@ -157,12 +157,45 @@ export const isAuth = () => {
 
 export const updateUserInLocalStorage = (user,next) => {
     /// checking if this is client side
-    if(process.browser){
-        if(localStorage.getItem('user')){
+    if (process.browser) {
+        if (localStorage.getItem('user')) {
             let auth = JSON.parse(localStorage.getItem('user'));
             auth = user;
-            localStorage.setItem('user',JSON.stringify(auth))
+            localStorage.setItem('user', JSON.stringify(auth))
             next()
         }
     }
 };
+export const forgotPassword = email => {
+    return fetch(`${API}/auth/forgot-password`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        },
+        body: JSON.stringify({email})
+    })
+        .then(response => {
+            return response.json()
+        })
+        .catch(error => {
+            console.error(error)
+        })
+}
+
+export const resetPassword = resetInfo => {
+    return fetch(`${API}/auth/reset-password`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        },
+        body: JSON.stringify(resetInfo)
+    })
+        .then(response => {
+            return response.json()
+        })
+        .catch(error => {
+            console.error(error)
+        })
+}

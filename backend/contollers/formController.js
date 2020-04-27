@@ -3,7 +3,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.contactForm = async (req, res) => {
     try {
-        const {email, message, name} = await req.body;
+        const {email, message, name} = req.body;
         const emailData = {
             to: process.env.EMAIL_TO,
             from: email,
@@ -11,7 +11,7 @@ exports.contactForm = async (req, res) => {
             text: `Email received from contact form \n 
             Sender Name: ${name} \n
             Sender Email: ${email} \n
-            Sender Message: ${data.message}`,
+            Sender Message: ${message}`,
             html: `
                 <h4>Email received from contact form</h4>
                 <p>Sender Name: ${name}</p>
@@ -22,15 +22,18 @@ exports.contactForm = async (req, res) => {
                 <p>https://anthonyfink.dev</p>
             `
         }
-        sgMail.send(emailData)
-            .then((sent) => {
+        await sgMail.send(emailData)
+            .then(() => {
                 return res.json({
                     success: true
                 })
             })
+            .catch((error) => {
+                // console.log(error.response.body)
+                console.log(error.response.body.errors[0].message)
+            })
     } catch (error) {
-        console.error(error.message);
-        res.status(500).send("Server Error");
+        throw error
     }
 };
 
@@ -47,7 +50,7 @@ exports.contactBlogAuthorForm = async (req, res) => {
             text: `Email received from contact form \n 
             Sender Name: ${name} \n
             Sender Email: ${email} \n
-            Sender Message: ${data.message}`,
+            Sender Message: ${message}`,
             html: `
                 <h4>Email received from contact form</h4>
                 <p>Sender Name: ${name}</p>
@@ -58,8 +61,8 @@ exports.contactBlogAuthorForm = async (req, res) => {
                 <p>https://anthonyfink.dev</p>
             `
         }
-        sgMail.send(emailData)
-            .then((sent) => {
+        await sgMail.send(emailData)
+            .then(sent => {
                 return res.json({
                     success: true
                 })

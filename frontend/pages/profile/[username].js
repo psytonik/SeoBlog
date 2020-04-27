@@ -6,6 +6,7 @@ import Layout from "../../components/Layout";
 import {API, APP_NAME, DOMAIN} from "../../config";
 import moment from "moment";
 import {Card, CardBody, Col, Row} from "reactstrap";
+import ContactForm from "../../components/ContactForm";
 
 const PublicUseProfile = ({user, blogs}) => {
     const head = () => (<Head>
@@ -80,7 +81,7 @@ const PublicUseProfile = ({user, blogs}) => {
                                         Message {user.name}
                                     </h5>
                                     <br/>
-                                    <h6>Contact Form</h6>
+                                    <ContactForm authorEmail={user.email}/>
                                 </CardBody>
                             </Card>
                         </Col>

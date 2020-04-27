@@ -66,12 +66,17 @@ const NavBar = () => {
                         {isAuth() && (<NavItem>
                             <NavLink
                                 color="link"
-                                style={{ cursor: 'pointer' }}
+                                style={{cursor: 'pointer'}}
                                 onClick={() => signOut(() => Router.replace(`/signin`))}>Sign Out</NavLink>
                         </NavItem>)}
                         <NavItem>
                             <Link href="/blog">
-                                <NavLink style={{ cursor: 'pointer' }} color="link">Blog</NavLink>
+                                <NavLink style={{cursor: 'pointer'}} color="link">Blog</NavLink>
+                            </Link>
+                        </NavItem>
+                        <NavItem>
+                            <Link href="/contact">
+                                <NavLink style={{cursor: 'pointer'}} color="link">Contact Us</NavLink>
                             </Link>
                         </NavItem>
                     </Nav>
