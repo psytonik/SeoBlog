@@ -173,7 +173,7 @@ export const forgotPassword = email => {
             "Content-Type": "application/json",
             Accept: "application/json"
         },
-        body: JSON.stringify({email})
+        body: JSON.stringify(email)
     })
         .then(response => {
             return response.json()

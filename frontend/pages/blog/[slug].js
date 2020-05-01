@@ -7,6 +7,7 @@ import {APP_NAME, DOMAIN,API} from "../../config";
 import moment from "moment";
 import reactRenderHtml from "react-render-html";
 import CardRelated from "../../components/CardRelated";
+import DisqusThread from "../../components/DisqusThread/DisqusThread";
 
 const SingleBlog = ({blog}) => {
     const [related,setRelated] = useState([]);
@@ -24,25 +25,32 @@ const SingleBlog = ({blog}) => {
        loadRelated()
     },[]);
     const showRelatedBlog = (related) => {
-        return related && related.map((blog,i)=>{
+        return related && related.map((blog, i) => {
             return (
-                        <div className="col-md-4 text-break" key={i}>
-                            <article>
-                                <CardRelated blog={blog}/>
-                            </article>
-                        </div>
+                <div className="col-md-4 text-break" key={i}>
+                    <article>
+                        <CardRelated blog={blog}/>
+                    </article>
+                </div>
             )
         })
     };
+    const showComments = () => {
+        return (
+            <div>
+                <DisqusThread id={blog.id} title={blog.title} path={`/blog/${blog.slug}`}/>
+            </div>
+        )
+    }
     const head = () => (<Head>
-            <title>{blog.title} | {APP_NAME}</title>
-            <meta name="description" content={blog.metaDescription}/>
-            <link rel="canonical" href={`${DOMAIN}/blog/${blog.slug}`}/>
-            <meta property="og:title" content={`${blog.title} | ${APP_NAME}`}/>
-            <meta property="og:description" content={blog.metaDescription}/>
-            <meta property="og:type" content="website"/>
-            <meta property="og:url" content={`${DOMAIN}/blog/${blog.slug}`}/>
-            <meta property="og:site_name" content={`${APP_NAME}`}/>
+        <title>{blog.title} | {APP_NAME}</title>
+        <meta name="description" content={blog.metaDescription}/>
+        <link rel="canonical" href={`${DOMAIN}/blog/${blog.slug}`}/>
+        <meta property="og:title" content={`${blog.title} | ${APP_NAME}`}/>
+        <meta property="og:description" content={blog.metaDescription}/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content={`${DOMAIN}/blog/${blog.slug}`}/>
+        <meta property="og:site_name" content={`${APP_NAME}`}/>
 
             <meta property="og:image" content={`${DOMAIN}/static/images/psytonik.jpg`}/>
             <meta property="og:image:secure_url" content={`${DOMAIN}/static/images/psytonik.jpg`}/>
@@ -105,7 +113,7 @@ const SingleBlog = ({blog}) => {
                                 </div>
                                 <div className="container pb-5">
                                     <br/>
-                                    <p>show comments</p>
+                                    {showComments()}
                                 </div>
                             </section>
                         </div>

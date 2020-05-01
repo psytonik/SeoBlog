@@ -6,4 +6,5 @@ export const APP_NAME = publicRuntimeConfig.APP_NAME;
 
 export const DOMAIN = publicRuntimeConfig.DOMAIN_DEVELOPMENT;
 
-export const config = { amp: true };
+export const config = {amp: true};
+export const DISQUS_SHORTNAME = publicRuntimeConfig.DISQUS_SHORTNAME;

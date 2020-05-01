@@ -1,5 +1,6 @@
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const nodeMailer = require('nodemailer');
 
 exports.contactForm = async (req, res) => {
     try {
@@ -29,7 +30,6 @@ exports.contactForm = async (req, res) => {
                 })
             })
             .catch((error) => {
-                // console.log(error.response.body)
                 console.log(error.response.body.errors[0].message)
             })
     } catch (error) {

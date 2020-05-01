@@ -3,6 +3,7 @@ import {Button, Col, Form, FormGroup, Input, Label, Row} from 'reactstrap';
 import {signUp,signIn,authenticateUser,isAuth} from '../../service/actions/auth';
 import Router from 'next/router';
 import Spinner from "../Spinner";
+import Link from "next/link";
 
 /**
  * Its smart Sign Up and Sign In Component
@@ -149,9 +150,15 @@ const AuthComponent = props => {
                                 </FormGroup>
                             </Col>
                         </Row>
-                        <Button color="primary">
+                        <Button color="outline-primary">
                             Sign In
                         </Button>
+                        <hr/>
+                        <div className="mt-2">
+                            <Link href='/auth/password/forgotpassword'>
+                                <a>Forget Password</a>
+                            </Link>
+                        </div>
                     </Fragment>
                 )}
             </Form>
