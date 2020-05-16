@@ -1,6 +1,5 @@
-import React, {Fragment, useState, useEffect} from 'react';
+import React, {Fragment, useState} from 'react';
 import {Form, FormGroup, Input, Button, Label} from "reactstrap";
-import Link from "next/link";
 import {sendContactMessage} from '../../service/actions/contactForm'
 
 const ContactForm = ({authorEmail}) => {
@@ -13,7 +12,7 @@ const ContactForm = ({authorEmail}) => {
         sent: false,
         buttonText: 'Send Message'
     });
-    const {name, email, message, error, success, sent, buttonText} = values;
+    const {name, email, message, error, success, buttonText} = values;
 
     const handleChange = name => e => {
         const value = e.target.value;
@@ -35,7 +34,7 @@ const ContactForm = ({authorEmail}) => {
                         email: '',
                         message: '',
                         error: false,
-                        success: data.success,
+                        success: true,
                         buttonText: 'Sent'
                     })
                 }

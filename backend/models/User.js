@@ -57,7 +57,7 @@ UserSchema.virtual('password')
         this._password = password;
         /// generate salt
         this.salt = this.makeSalt();
-        /// encrypt password
+        /// encrypt reset-password
         this.hashed_password = this.encryptPassword(password)
     })
     .get(function(){

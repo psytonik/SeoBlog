@@ -8,31 +8,93 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const _ = require('lodash');
 //// Controllers
-exports.signUp = async (req, res) => {
+exports.preSignUp = async (req, res) => {
     try {
-        await User.findOne({email: req.body.email})
-            .exec((error, user) => {
-                if (user) {
-                    return res.status(400).json({
-                        error: 'Email is already exists'
-                    })
-                }
-                const {name, email, password} = req.body;
-                let username = shortId.generate();
-                let profile = `${process.env.CLIENT_URL}/profile/${username}`;
-                let newUser = new User({name, email, password, profile, username});
-                newUser.save((error, success) => {
-                    if (error) {
-                        return res.status(400).json({error: error});
-                    }
-                    return res.json({message: 'Sign Up success! Please Sign In'});
+        const {name, email, password} = req.body;
+        await User.findOne({email: email.toLowerCase()}, (error, user) => {
+            if (user) {
+                return res.status(400).json({
+                    error: `User with this ${email} is already exists`
                 })
-            })
+            }
+            const token = jwt.sign({name, email, password}, process.env.JWT_ACCOUNT_ACTIVATION, {expiresIn: '10m'});
+            const emailData = {
+                from: process.env.EMAIL_FROM,
+                to: email,
+                subject: `Account Activation Link`,
+                html: `
+                <p>${name} Please use the following link to activate your account:</p>
+                <p>${process.env.CLIENT_URL}/auth/account/activate/${token}</p>
+                <hr/>
+                <p>This email may contain sensitive information</p>
+                <p>https://anthonyfink.dev</p>`
+            };
+            sgMail.send(emailData)
+                .then(() => {
+                    return res.json({message: `Email has been sent to ${email} Follow the instructions to activate account.`})
+                })
+        })
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Sever Error")
     }
 };
+
+// exports.signUp = async (req, res) => {
+//     try {
+//         await User.findOne({email: req.body.email})
+//             .exec((error, user) => {
+//                 if (user) {
+//                     return res.status(400).json({
+//                         error: 'Email is already exists'
+//                     })
+//                 }
+//                 const {name, email, password} = req.body;
+//                 let username = shortId.generate();
+//                 let profile = `${process.env.CLIENT_URL}/profile/${username}`;
+//                 let newUser = new User({name, email, password, profile, username});
+//                 newUser.save((error) => {
+//                     if (error) {
+//                         return res.status(400).json({error: error});
+//                     }
+//                     return res.json({message: 'Sign Up success! Please Sign In'});
+//                 })
+//             })
+//     } catch (error) {
+//         console.error(error.message);
+//         res.status(500).send("Sever Error")
+//     }
+// };
+
+exports.signUp = async (req, res) => {
+    try {
+        const token = req.body.token;
+        if (token) {
+            jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, (error) => {
+                if (error) {
+                    return res.status(401).json({
+                        error: 'Expired Link, Please Sign Up again'
+                    })
+                }
+                const {name, email, password} = jwt.decode(token);
+                let username = shortId.generate();
+                let profile = `${process.env.CLIENT_URL}/profile/${username}`;
+                let newUser = new User({name, email, password, profile, username});
+                newUser.save((error) => {
+                    if (error) {
+                        return res.status(401).json({error: errorHandler(error)});
+                    }
+                    return res.json({message: 'Sign Up success! Please Sign In'});
+                })
+            })
+        } else {
+            return res.json({message: 'Something went wrong, Try again !!!'});
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Sever Error")
+    }
+}
 exports.signIn = async (req, res) => {
     /// Check if user exists
     try {
@@ -43,7 +105,7 @@ exports.signIn = async (req, res) => {
             }
             //// Authenticate
             if (!user.authenticate(password)) {
-                return res.status(400).json({error: "Email and password do not match"})
+                return res.status(400).json({error: "Email and reset-password do not match"})
             }
             /// Generate Json Web Token and send to client
             const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {expiresIn: '1d'});
@@ -140,7 +202,7 @@ exports.forgotPassword = async (req, res) => {
             const emailData = {
                 from: process.env.EMAIL_FROM,
                 to: email,
-                subject: `Password Reset Link`,
+                subject: `Password Reset Link from AnthonyFink.dev Blog`,
                 html: `
                 <p>Please use the following link to reset your password:</p>
                 <p>${process.env.CLIENT_URL}/auth/reset-password/${token}</p>
@@ -149,7 +211,7 @@ exports.forgotPassword = async (req, res) => {
                 <p>https://anthonyfink.dev</p>
             `
             };
-            return user.updateOne({resetPasswordLink: token}, (error, success) => {
+            return user.updateOne({resetPasswordLink: token}, (error) => {
                 if (error) {
                     return res.json({error: errorHandler(error)})
                 } else {
@@ -173,6 +235,7 @@ exports.resetPassword = async (req, res) => {
         const {resetPasswordLink, newPassword} = await req.body;
         if (resetPasswordLink) {
             jwt.verify(resetPasswordLink, process.env.JWT_RESET_PASSWORD, (error, decoded) => {
+                console.log(decoded, 'decoded reset-password')
                 if (error) {
                     return res.status(401).json({
                         error: 'Expired Link, Try again'
@@ -189,14 +252,14 @@ exports.resetPassword = async (req, res) => {
                         resetPasswordLink: ''
                     }
                     user = _.extend(user, updatedFields)
-                    user.save((error, success) => {
+                    user.save((error) => {
                         if (error) {
                             return res.status(400).json({
                                 error: errorHandler(error)
                             })
                         }
                         res.json({
-                            message: `Great! Now you can login with your new password ${success}`
+                            message: `Great! Now you can login with your new password`
                         })
                     })
                 })

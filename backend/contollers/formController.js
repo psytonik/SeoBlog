@@ -1,13 +1,12 @@
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const nodeMailer = require('nodemailer');
 
 exports.contactForm = async (req, res) => {
     try {
         const {email, message, name} = req.body;
         const emailData = {
             to: process.env.EMAIL_TO,
-            from: email,
+            from: process.env.EMAIL_FROM,
             subject: `Contact Form - ${process.env.APP_NAME}`,
             text: `Email received from contact form \n 
             Sender Name: ${name} \n
@@ -45,7 +44,7 @@ exports.contactBlogAuthorForm = async (req, res) => {
 
         const emailData = {
             to: mailList,
-            from: email,
+            from: process.env.EMAIL_FROM,
             subject: `Someone message you from - ${process.env.APP_NAME}`,
             text: `Email received from contact form \n 
             Sender Name: ${name} \n
@@ -62,7 +61,7 @@ exports.contactBlogAuthorForm = async (req, res) => {
             `
         }
         await sgMail.send(emailData)
-            .then(sent => {
+            .then(() => {
                 return res.json({
                     success: true
                 })

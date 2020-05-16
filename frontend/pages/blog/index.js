@@ -1,4 +1,4 @@
-import React,{useState,useEffect,Fragment} from 'react';
+import React, {useState, Fragment} from 'react';
 import Head from "next/head";
 import Link from "next/link";
 import {withRouter} from "next/router";
@@ -7,7 +7,8 @@ import Layout from "../../components/Layout";
 import {Button} from "reactstrap";
 import CardComponent from "../../components/CardComponent";
 import {APP_NAME,DOMAIN} from "../../config";
-const Index = ({blogs,categories,tags,blogTotal,blogLimit,blogSkip,router}) => {
+
+const Index = ({blogs, categories, tags, blogTotal, blogLimit, router}) => {
     const head = () => (
         <Head>
             <title>Programming Blog's | {APP_NAME}</title>
@@ -26,17 +27,17 @@ const Index = ({blogs,categories,tags,blogTotal,blogLimit,blogSkip,router}) => {
         </Head>
     );
 
-    const [limit,setLimit] = useState(blogLimit);
-    const [skip,setSkip] = useState(0);
-    const [size,setSize] = useState(blogTotal);
-    const [loadedBlog,setLoadedBlog] = useState([]);
+    const [limit] = useState(blogLimit);
+    const [skip, setSkip] = useState(0);
+    const [size, setSize] = useState(blogTotal);
+    const [loadedBlog, setLoadedBlog] = useState([]);
 
     const loadMore = () => {
         let toSkip = skip + limit;
-        getBlogWithCatsAndTags(toSkip,limit)
-            .then(data=>{
-                if(data.error){
-                   console.error(data.error)
+        getBlogWithCatsAndTags(toSkip, limit)
+            .then(data => {
+                if (data.error) {
+                    console.error(data.error)
                 } else {
                     setLoadedBlog([...loadedBlog,...data.blogs]);
                     setSize(data.size);

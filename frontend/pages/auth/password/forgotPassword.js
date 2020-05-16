@@ -21,6 +21,7 @@ const ForgotPassword = () => {
         setValues({...values, message: '', error: ''})
         forgotPassword({email})
             .then(data => {
+                console.log(data)
                 if (data.error) {
                     setValues({...values, error: data.error})
                 } else {

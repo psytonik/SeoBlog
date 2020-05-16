@@ -18,6 +18,27 @@ export const handleResponse = response => {
     }
 };
 /**
+ * REGISTER USER AND ACTIVATE
+ * @param user
+ * @returns {Promise<T>}
+ */
+export const preSignUp = user => {
+    return fetch(`${API}/auth/pre-signup`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+        },
+        body: JSON.stringify(user)
+    })
+        .then(response => {
+            return response.json()
+        })
+        .catch(error => {
+            console.log(error)
+        })
+};
+/**
  * REGISTER USER AND SAVE IN DB
  * @param user
  * @returns {Promise<T>}
@@ -67,13 +88,13 @@ export const signOut = next => {
     removeCookie('token');
     removeLocalStorage('user');
     next();
-    return fetch(`${API}/auth/signout`,{
-        method:'GET'
+    return fetch(`${API}/auth/signout`, {
+        method: 'GET'
     })
-        .then(response=>{
+        .then(() => {
             console.log('sign out success')
         })
-        .catch(error=>{
+        .catch(error => {
             console.error(error)
         })
 };
@@ -159,13 +180,13 @@ export const updateUserInLocalStorage = (user,next) => {
     /// checking if this is client side
     if (process.browser) {
         if (localStorage.getItem('user')) {
-            let auth = JSON.parse(localStorage.getItem('user'));
-            auth = user;
-            localStorage.setItem('user', JSON.stringify(auth))
+            user = JSON.parse(localStorage.getItem('user'));
+            localStorage.setItem('user', JSON.stringify(user))
             next()
         }
     }
 };
+
 export const forgotPassword = email => {
     return fetch(`${API}/auth/forgot-password`, {
         method: "PUT",

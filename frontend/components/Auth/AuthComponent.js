@@ -1,6 +1,6 @@
 import React, {Fragment, useState,useEffect} from 'react';
 import {Button, Col, Form, FormGroup, Input, Label, Row} from 'reactstrap';
-import {signUp,signIn,authenticateUser,isAuth} from '../../service/actions/auth';
+import {preSignUp, signIn, authenticateUser, isAuth} from '../../service/actions/auth';
 import Router from 'next/router';
 import Spinner from "../Spinner";
 import Link from "next/link";
@@ -34,7 +34,7 @@ const AuthComponent = props => {
             setUserData({...userData, error: 'Password do not match', loading: false})
         } else {
             isLoginPage ?
-                signUp(user)
+                preSignUp(user)
                 .then((data) => {
                     if (data.error) {
                         setUserData({...userData, error: data.error, loading: false})

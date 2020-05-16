@@ -1,7 +1,7 @@
-import React, {Fragment, useState} from 'react';
-import Layout from "../../../../components/Layout";
+import React, {useState} from 'react';
+import Layout from "../../../components/Layout";
 import {withRouter} from "next/router";
-import {resetPassword} from "../../../../service/actions/auth";
+import {resetPassword} from "../../../service/actions/auth";
 import {Button, Form, FormGroup, Input, Label} from "reactstrap";
 import Link from "next/link";
 
@@ -14,7 +14,7 @@ const ResetPassword = ({router}) => {
         message: '',
         showForm: true
     })
-    const {name, newPassword, showForm, message, error} = values;
+    const {newPassword, showForm, message, error} = values;
     const handleChange = name => e => {
         setValues({...values, message: '', error: '', [name]: e.target.value})
     };

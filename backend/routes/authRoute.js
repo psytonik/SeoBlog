@@ -5,9 +5,10 @@ const router = express.Router();
 const {runValidation} = require('../validators');
 const {userSignUpValidator, userSignInValidator, forgotPasswordValidator, resetPasswordValidator} = require('../validators/authValidator');
 
-const {signUp, signIn, signOut, forgotPassword, resetPassword} = require('../contollers/authController');
+const {preSignUp, signUp, signIn, signOut, forgotPassword, resetPassword} = require('../contollers/authController');
 
-router.post('/auth/signup', userSignUpValidator, runValidation, signUp);
+router.post('/auth/pre-signup', userSignUpValidator, runValidation, preSignUp);
+router.post('/auth/signup', signUp);
 router.post('/auth/signin', userSignInValidator, runValidation, signIn);
 router.get('/auth/signout', signOut);
 router.put('/auth/forgot-password', forgotPasswordValidator, runValidation, forgotPassword);
