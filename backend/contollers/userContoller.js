@@ -1,3 +1,5 @@
+import slugify from "slugify";
+
 const _ = require('lodash');
 const formidable = require('formidable');
 const fs = require('fs');
@@ -7,7 +9,7 @@ const Blog = require('../models/Blog');
 const {errorHandler} = require("../helpers/dbErrorHandler");
 
 //// User Controller
-exports.readUserProfile = async (req,res) => {
+exports.readUserProfile = async (req, res) => {
     try {
         req.profile.hashed_password = undefined;
         return await res.json(req.profile);
@@ -54,35 +56,50 @@ exports.editUserProfile = async (req,res) => {
     try{
         let form = new formidable.IncomingForm();
         form.keepExtensions = true;
-        form.parse(req,(error,fields,files)=>{
-            if(error){
+        form.parse(req,(error,fields,files)=> {
+            if (error) {
                 return res.status(400).json({
-                    error:'Photo could not be uploaded'
+                    error: 'Photo could not be uploaded'
                 })
             }
             let user = req.profile;
-            user = _.extend(user,fields)
+            let existingRole = user.role;
+            let existingEmail = user.email;
 
-            if (fields.password && fields.password.length < 6){
+            if (fields && fields.username && fields.username.length > 20) {
                 return res.status(400).json({
-                    error:'Password should be minimum 6 characters long'
-                })
+                    error: 'Username should be less than 20 characters long'
+                });
             }
 
-            if(files.photo){
-                if(files.photo.size > 1000000){
+            if (fields.username) {
+                fields.username = slugify(fields.username).toLowerCase();
+            }
+
+            if (fields.password && fields.password.length < 6) {
+                return res.status(400).json({
+                    error: 'Password should be min 6 characters long'
+                });
+            }
+
+            user = _.extend(user, fields);
+            user.role = existingRole;
+            user.email = existingEmail;
+
+            if (files.photo) {
+                if (files.photo.size > 1000000) {
                     return res.status(400).json({
-                        error:'Image should be less than 1mb'
+                        error: 'Image should be less than 1mb'
                     })
                 }
                 user.photo.data = fs.readFileSync(files.photo.path)
                 user.photo.contentType = files.photo.type;
             }
 
-            user.save((error,result)=>{
-                if(error){
+            user.save((error) => {
+                if (error) {
                     return res.status(400).json({
-                        error:errorHandler(error)
+                        error: errorHandler(error)
                     })
                 }
                 user.hashed_password = undefined;
